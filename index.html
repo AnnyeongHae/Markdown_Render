@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MD Viewer & Converter - 100% 브라우저 처리</title>
+  <title>Free Online Markdown Viewer & Converter | MD to PDF, Word, HTML, PNG</title>
+  <meta name="description" content="Instant 100% local browser-based Markdown (.md) and Mermaid (.mmd) viewer & converter. Convert MD to PDF, Word (.docx), HTML, and PNG images with local image folder support. No server uploads.">
+  <meta name="keywords" content="markdown viewer online, markdown to pdf converter, markdown to word, md to docx, mermaid diagram viewer, markdown to html, offline markdown reader, convert md to png">
+  <meta name="robots" content="index, follow">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -11,7 +14,7 @@
   <link rel="stylesheet" href="vendor/codemirror/codemirror.min.css">
   <link rel="stylesheet" href="vendor/codemirror/dracula.min.css">
   
-  <!-- JSON-LD Structured Data for SEO & LLM Discovery -->
+  <!-- JSON-LD Structured Data for Google Search & LLM Discovery -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -24,7 +27,7 @@
       "price": "0",
       "priceCurrency": "USD"
     },
-    "description": "100% local, browser-based Markdown editor, Mermaid diagram renderer, and document converter (PDF, Word docx, HTML, PNG)."
+    "description": "Free 100% client-side browser Markdown viewer, editor, Mermaid diagram renderer, and document converter for PDF, Word (.docx), HTML, and PNG."
   }
   </script>
   <script type="application/ld+json">
@@ -152,6 +155,67 @@
       justify-content: center;
       gap: 10px;
       margin-bottom: 24px;
+    }
+
+    /* SEO Keyword Grid & Content Styles */
+    .seo-feature-section {
+      margin-top: 40px;
+      max-width: 960px;
+      width: 100%;
+      padding: 0 16px;
+      text-align: center;
+    }
+    .seo-heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .seo-subhead {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 24px auto;
+      line-height: 1.6;
+    }
+    .seo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      text-align: left;
+    }
+    .seo-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      transition: transform 0.15s ease;
+    }
+    .seo-card:hover {
+      transform: translateY(-2px);
+    }
+    .seo-card-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .seo-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .seo-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    @media (max-width: 768px) {
+      .seo-feature-section {
+        margin-top: 24px;
+      }
+      .seo-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     #draftRestoreWrap {
@@ -1283,6 +1347,35 @@
       <button class="btn" id="newDocBtn" data-i18n="newDocBtn">✍️ New Document</button>
     </div>
     <p class="caption-muted" data-i18n="newDocCaption">Start a new doc to jump straight into the editor.</p>
+
+    <!-- SEO Keyword Content Section (Indexed by Googlebot & Search Engines) -->
+    <div class="seo-feature-section">
+      <h1 class="seo-heading">Free Online Markdown Viewer & Converter</h1>
+      <p class="seo-subhead">Instantly view, edit, and convert Markdown (.md) and Mermaid (.mmd) diagrams into PDF, Word (.docx), HTML, and PNG directly in your browser. 100% Client-Side Privacy with zero server uploads.</p>
+      
+      <div class="seo-grid">
+        <div class="seo-card">
+          <div class="seo-card-icon">📄</div>
+          <h3>MD to PDF & Word (.docx)</h3>
+          <p>Export Markdown documents to clean PDF files or formatted Microsoft Word (.docx) documents with code block line wrapping and table support.</p>
+        </div>
+        <div class="seo-card">
+          <div class="seo-card-icon">📊</div>
+          <h3>Mermaid Live Renderer</h3>
+          <p>Render flowcharts, sequence diagrams, and architecture charts from Mermaid syntax in real-time. Export diagrams to vector SVG or high-res PNG.</p>
+        </div>
+        <div class="seo-card">
+          <div class="seo-card-icon">🖼️</div>
+          <h3>Local Folder & Zip Ingestion</h3>
+          <p>Drop entire folders containing Markdown files and relative image assets. Blobs are resolved 100% locally with zero missing image breaks.</p>
+        </div>
+        <div class="seo-card">
+          <div class="seo-card-icon">🔒</div>
+          <h3>100% Client-Side Privacy</h3>
+          <p>All parsing and rendering run locally inside your browser via Web APIs. Works completely offline as a Progressive Web App (PWA).</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Workspace View -->
