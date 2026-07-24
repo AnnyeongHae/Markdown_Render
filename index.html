@@ -23,6 +23,9 @@
     gtag('config', 'G-NV7WFHY8XG');
   </script>
 
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -1391,6 +1394,11 @@
           <p>All parsing and rendering run locally inside your browser via Web APIs. Works completely offline as a Progressive Web App (PWA).</p>
         </div>
       </div>
+
+      <!-- Feedback & Issue Link Footer -->
+      <div style="margin-top:24px; font-size:12.5px; color:var(--text-muted);">
+        💬 Found a bug or have feedback? <a href="https://github.com/AnnyeongHae/Markdown_Render/issues" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:600;">Report Issue on GitHub</a>
+      </div>
     </div>
   </div>
 
@@ -1399,7 +1407,7 @@
     <!-- Toolbar -->
     <div id="toolbar">
       <div class="brand" id="brandHome" data-i18n="brandTitle">
-        <span>📖</span> MD Viewer & Converter
+        <img src="assets/logo.svg" width="22" height="22" style="border-radius:5px; vertical-align:middle;" alt="Logo"> MD Viewer & Converter
       </div>
       <!-- Mobile View Segmented Switch (Edit <-> View) -->
       <div class="mobile-view-toggle" id="mobileViewToggle">
@@ -1594,6 +1602,8 @@
           <button id="mSubBtnDocx" class="btn">Word (.docx)</button>
           <button id="mSubBtnPng" class="btn">PNG</button>
         </div>
+        <hr style="border:none; border-top:1px solid var(--border); margin:4px 0;">
+        <a href="https://github.com/AnnyeongHae/Markdown_Render/issues" target="_blank" class="btn" style="width:100%; text-decoration:none; text-align:center; box-sizing:border-box; font-size:11.5px;">💬 Report Issue / Feedback</a>
       </div>
     </div>
   </div>
