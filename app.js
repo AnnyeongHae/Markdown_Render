@@ -29,7 +29,7 @@ function ensureCss(href,id){ if(document.getElementById(id))return; const l=docu
 const _loaded={};
 function loadOnce(key){
   if(_loaded[key]) return _loaded[key];
-  if (['mermaid', 'katex', 'katexAuto', 'docx'].includes(key)) {
+  if (['mermaid', 'katex', 'katexAuto', 'docx', 'png', 'jszip'].includes(key)) {
     _loaded[key] = injectScript(CDN[key]).catch(() => injectScript(VENDOR[key]));
   } else {
     _loaded[key] = injectScript(VENDOR[key]).catch(() => injectScript(CDN[key]));
@@ -987,6 +987,8 @@ async function exportPng(){
       pixelRatio: 2,
       backgroundColor: '#ffffff',
       cacheBust: true,
+      fontEmbedCSS: '',
+      skipFonts: true,
       filter: (node) => {
         return !(node.classList && node.classList.contains('copy-code-btn'));
       }
