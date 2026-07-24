@@ -1454,34 +1454,39 @@
       @page {
         margin: 0;
       }
-      body {
-        margin: 0;
-        padding: 1.5cm !important;
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
         background: #ffffff !important;
         color: #000000 !important;
+        height: auto !important;
+        overflow: visible !important;
       }
-      #toolbar, #sidebar, #editor-pane, #divider, .copy-code-btn, .toast, .spinner-overlay, #dropzone {
+      #toolbar, #sidebar, #editor-pane, #divider, .copy-code-btn, .toast, .spinner-overlay, #dropzone, #mobileDocBar, .mobile-view-toggle, #btnMobileSettings {
         display: none !important;
         opacity: 0 !important;
         visibility: hidden !important;
       }
-      #workspace {
+      #workspace, #panes, #preview-pane, #previewWrap {
         display: block !important;
+        position: static !important;
+        width: 100% !important;
         height: auto !important;
-      }
-      #preview-pane {
-        display: block !important;
-        width: 100% !important;
+        min-height: 0 !important;
         overflow: visible !important;
-      }
-      #previewWrap {
-        width: 100% !important;
-        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
       }
       .paper {
         box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
+        padding: 1.5cm !important;
+        margin: 0 auto !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        background: #ffffff !important;
       }
 
       /* PDF Print Carousel Flattening Rules */
