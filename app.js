@@ -1231,6 +1231,8 @@ window.addEventListener("DOMContentLoaded",()=>{
         btn.className = 'btn';
         btn.style.borderColor = 'var(--accent)';
         btn.style.color = 'var(--accent)';
+        btn.style.fontSize = '12px';
+        btn.style.padding = '6px 14px';
         btn.textContent = '⏱️ ' + i18n.t('btnRestoreDraft');
         btn.onclick = () => {
           reset();
@@ -1242,8 +1244,15 @@ window.addEventListener("DOMContentLoaded",()=>{
           selectDoc(0);
           toast(i18n.t('toastDraftRestored'));
         };
-        const btnGroup = document.querySelector('.btn-group');
-        if(btnGroup) btnGroup.appendChild(btn);
+        let draftWrap = document.querySelector('#draftRestoreWrap');
+        if (!draftWrap) {
+          draftWrap = document.createElement('div');
+          draftWrap.id = 'draftRestoreWrap';
+          const dropzone = document.querySelector('#dropzone');
+          if (dropzone) dropzone.appendChild(draftWrap);
+        }
+        draftWrap.innerHTML = '';
+        draftWrap.appendChild(btn);
       }
     } catch(e){}
   }
