@@ -615,6 +615,8 @@ function selectDoc(i){
 
 function renderPreview(){
   try {
+    window.state = state;
+    window.renderPreview = renderPreview;
     const doc=currentDoc(); if(!doc) return;
     const text = doc.text || "";
     // lazy-load highlight.js only when the doc has code fences
@@ -652,25 +654,40 @@ function renderPreview(){
     tmp.querySelectorAll('blockquote').forEach(bq => {
       const firstP = bq.querySelector('p');
       if(!firstP) return;
-      const match = firstP.innerHTML.match(/^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION|INFO|TODO|FAQ|QUOTE)\](?:\s+(.*))?/i);
+      const fullHtml = firstP.innerHTML.trim();
+      const match = fullHtml.match(/^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION|INFO|TODO|FAQ|QUOTE)\](?:\s+([\s\S]*))?/i);
       if(match) {
         const type = match[1].toLowerCase();
-        const rawTitle = match[2] ? match[2].trim() : '';
+        const contentAfterTag = match[2] ? match[2].trim() : '';
         const icons = { note: '📝', tip: '💡', important: '⚡', warning: '⚠️', caution: '🚨', info: 'ℹ️', todo: '☑️', faq: '❓', quote: '💬' };
         const icon = icons[type] || '📌';
-        const titleText = rawTitle || (type.charAt(0).toUpperCase() + type.slice(1));
+        
+        let titleHtml = '';
+        let bodyHtml = '';
+        const brMatch = contentAfterTag.match(/<br\s*\/?>/i);
+        if (brMatch) {
+          const splitIdx = brMatch.index;
+          titleHtml = contentAfterTag.substring(0, splitIdx).trim();
+          bodyHtml = contentAfterTag.substring(splitIdx + brMatch[0].length).trim();
+        } else {
+          titleHtml = contentAfterTag;
+        }
 
-        firstP.innerHTML = firstP.innerHTML.replace(/^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION|INFO|TODO|FAQ|QUOTE)\](?:\s+.*)?/i, '').trim();
+        if (!titleHtml) {
+          titleHtml = type.charAt(0).toUpperCase() + type.slice(1);
+        }
 
         const calloutDiv = document.createElement('div');
         calloutDiv.className = `callout callout-${type}`;
-        calloutDiv.innerHTML = `<div class="callout-title"><span>${icon}</span> ${esc(titleText)}</div>`;
+        
+        let headerHtml = `<div class="callout-title"><span>${icon}</span> ${titleHtml}</div>`;
+        if (bodyHtml) {
+          headerHtml += `<div class="callout-body" style="margin-top:6px; font-size:12.5px; line-height:1.6;">${bodyHtml}</div>`;
+        }
+
+        firstP.innerHTML = headerHtml;
 
         while(bq.firstChild) {
-          if(bq.firstChild.nodeType === 3 && !bq.firstChild.textContent.trim()) {
-            bq.removeChild(bq.firstChild);
-            continue;
-          }
           calloutDiv.appendChild(bq.firstChild);
         }
         bq.replaceWith(calloutDiv);
@@ -969,6 +986,34 @@ function getExportCleanHtml() {
 
   // 1. Remove copy buttons
   clone.querySelectorAll('.copy-code-btn').forEach(btn => btn.remove());
+
+  // 1-2. Flatten Carousel Slides for HTML / Word Exports (Show all slides sequentially)
+  clone.querySelectorAll('.md-carousel-wrapper').forEach(wrapper => {
+    const track = wrapper.querySelector('.md-carousel-track');
+    const header = wrapper.querySelector('.md-carousel-header');
+    const footer = wrapper.querySelector('.md-carousel-footer');
+    
+    if (header) header.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    
+    if (track) {
+      track.style.display = 'block';
+      track.style.transform = 'none';
+      track.style.width = '100%';
+    }
+
+    const slides = wrapper.querySelectorAll('.md-carousel-slide');
+    slides.forEach((slide, i) => {
+      slide.style.display = 'block';
+      slide.style.opacity = '1';
+      slide.style.width = '100%';
+      slide.style.padding = '16px';
+      slide.style.boxSizing = 'border-box';
+      if (i < slides.length - 1) {
+        slide.style.borderBottom = '1px dashed #e1e4e8';
+      }
+    });
+  });
 
   // 2. Inline code block styling for HTML/Word
   clone.querySelectorAll('pre').forEach(pre => {
