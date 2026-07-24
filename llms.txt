@@ -1,0 +1,19 @@
+# MD Viewer & Converter (Markdown Render)
+
+> A 100% local, browser-based Markdown editor, Mermaid diagram renderer, and high-fidelity document converter (PDF, Word docx, HTML, PNG).
+
+## Key Features & Capabilities
+- **Local-First Privacy**: 100% client-side execution in browser. No file or text is uploaded to any server.
+- **Mermaid Diagram Rendering**: Renders ```mermaid ``` code blocks into crisp vector diagrams with an 85% modal viewer, pan, zoom, and SVG/PNG exports.
+- **Multi-Format Exports**:
+  - **PDF Export**: Clean print styling with page-break avoidance (`page-break-inside: avoid`).
+  - **Word (.docx)**: Dual width (520px) and height scaling for perfect MS Word A4 layout integration without overflow.
+  - **HTML Export**: Standalone clean HTML with styled code boxes and copy-button stripping.
+  - **PNG Export**: 2x high-resolution wide image captures.
+- **ASCII & Box Drawing Alignment**: Auto-detects `┌─┬─┐` architecture box art and aligns vertical borders using D2Coding/Consolas monospace fonts.
+- **Drag & Drop Resizer**: Interactive `#divider` between editor and preview panes with 280px / 360px minimum width limits.
+- **Internationalization (i18n)**: Supports English (default), Korean, Japanese, Chinese, and Spanish.
+
+## Canonical URL
+- Website: https://markdownrender.pages.dev/
+- GitHub: https://github.com/AnnyeongHae/Markdown_Render

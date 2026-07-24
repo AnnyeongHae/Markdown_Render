@@ -11,6 +11,55 @@
   <link rel="stylesheet" href="vendor/codemirror/codemirror.min.css">
   <link rel="stylesheet" href="vendor/codemirror/dracula.min.css">
   
+  <!-- JSON-LD Structured Data for SEO & LLM Discovery -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MD Viewer & Converter",
+    "operatingSystem": "All",
+    "applicationCategory": "DeveloperApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "100% local, browser-based Markdown editor, Mermaid diagram renderer, and document converter (PDF, Word docx, HTML, PNG)."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is my Markdown content uploaded to any server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. MD Viewer & Converter operates 100% locally inside your web browser. Your text, files, and images are never uploaded to any remote server."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I export Mermaid diagrams to PDF and Word (.docx)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Diagrams created with ```mermaid code blocks are automatically rendered and scaled (520px max width for Word A4 layout) without breaking or getting cropped."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does local image folder drop work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can drop an entire folder containing markdown files and images. The application automatically links relative image paths using local Blob URLs."
+        }
+      }
+    ]
+  }
+  </script>
+  
   <style>
     :root {
       --border: #dee2e6;

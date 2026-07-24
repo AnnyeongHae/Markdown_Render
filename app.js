@@ -633,22 +633,27 @@ function updateSyntaxHealthUI(text) {
 
   if (issues.length === 0) {
     tag.className = "syntax-tag ok";
-    tag.innerHTML = "🟢 문법 정상";
-    tag.title = "마크다운, 수식, 코드 블록 문법이 올바릅니다.";
+    tag.innerHTML = "🟢 " + i18n.t('syntaxOk');
+    tag.title = i18n.t('syntaxOkTitle');
     tag.onclick = null;
   } else {
     tag.className = "syntax-tag warn";
-    tag.innerHTML = `⚠️ 문법 경고 ${issues.length}개`;
+    tag.innerHTML = `⚠️ ${i18n.t('syntaxWarn')} (${issues.length})`;
     tag.title = issues.join('\n');
     tag.onclick = () => {
-      alert("⚠️ 마크다운 구문 경고 사항:\n\n" + issues.map((iss, i) => `${i + 1}. ${iss}`).join('\n'));
+      alert(`⚠️ ${i18n.t('syntaxWarn')}:\n\n` + issues.map((iss, i) => `${i + 1}. ${iss}`).join('\n'));
     };
   }
 }
 
 function updateCounts(){
   const t = cmEditor ? cmEditor.getValue() : $("editor").value;
-  $("counts").textContent=t.length+'자 · '+(t.trim()?t.trim().split(/\s+/).length:0)+'단어';
+  const wordCount = t.trim() ? t.trim().split(/\s+/).length : 0;
+  if (window.i18n && window.i18n.getLang() === 'ko') {
+    $("counts").textContent = t.length + '자 · ' + wordCount + '단어';
+  } else {
+    $("counts").textContent = t.length + ' chars · ' + wordCount + ' words';
+  }
   updateSyntaxHealthUI(t);
 }
 function updateAssetInfo(){
@@ -1124,7 +1129,7 @@ window.addEventListener("DOMContentLoaded",()=>{
         btn.className = 'btn';
         btn.style.borderColor = 'var(--accent)';
         btn.style.color = 'var(--accent)';
-        btn.textContent = '⏱️ 저장된 초안 복구';
+        btn.textContent = '⏱️ ' + i18n.t('btnRestoreDraft');
         btn.onclick = () => {
           reset();
           state.docs.push({ name: data.name || 'draft.md', path: data.name || 'draft.md', bytes: new Uint8Array(), encoding: 'utf-8', detected: 'utf-8', text: data.text });
@@ -1133,7 +1138,7 @@ window.addEventListener("DOMContentLoaded",()=>{
           $("toolbar").style.display = "flex";
           renderFileList();
           selectDoc(0);
-          toast("이전 저장된 초안이 복구되었습니다.");
+          toast(i18n.t('toastDraftRestored'));
         };
         const btnGroup = document.querySelector('.btn-group');
         if(btnGroup) btnGroup.appendChild(btn);
