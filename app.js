@@ -560,7 +560,7 @@ function renderPreview(){
       tocList.innerHTML = "";
       const headers = tmp.querySelectorAll('h1, h2, h3');
       if(!headers.length) {
-        tocList.innerHTML = '<div style="font-size:11px;color:var(--text-muted);">목차(H1~H3)가 없습니다.</div>';
+        tocList.innerHTML = '<div style="font-size:11px;color:var(--text-muted);">' + (window.i18n ? window.i18n.t('tocEmpty') : 'No headings (H1~H3) found') + '</div>';
       } else {
         headers.forEach((h, idx) => {
           const id = 'heading-' + idx;
@@ -689,11 +689,21 @@ function updateCounts(){
 }
 function updateAssetInfo(){
   const info=$("assetInfo"); const miss=[...new Set(state.missing)];
-  let h=`이미지 자산 <b>${state.assets.size}</b>개`; if(miss.length) h+=` · <span class="missing">누락 ${miss.length}</span>`;
+  const assetTitleText = window.i18n ? window.i18n.t('assetTitle') : "Image Assets: ";
+  const assetMissingText = window.i18n ? window.i18n.t('assetMissing') : "Missing: ";
+  const btnAddImgText = window.i18n ? window.i18n.t('btnAddImg') : "＋ Add Image Directly";
+  const bindHeadText = window.i18n ? window.i18n.t('bindHead') : "🔗 Link Missing Images";
+  const bindCardDescText = window.i18n ? window.i18n.t('bindCardDesc') : "Drag image here or click to select";
+
+  let h=`${assetTitleText}<b>${state.assets.size}</b>`;
+  if(miss.length) h+=` · <span class="missing">${assetMissingText}${miss.length}</span>`;
   h+='<div class="imglist">';
   state.imgNames.slice(0,30).forEach(n=>{ h+='✔ '+esc(n.split('/').pop())+'<br/>'; });
-  h+='</div><button class="addimg btn" id="btnAddImg">＋ 이미지 직접 추가</button>';
-  if(miss.length){ h+='<div class="bindhead">🔗 누락 이미지 연결</div>'; miss.forEach((m,idx)=>{ h+=`<div class="bindcard" data-idx="${idx}"><div class="bn">${esc(keyOf(m)||m)}</div><div class="bd">여기로 이미지 드래그 · 클릭해서 선택</div></div>`; }); }
+  h+=`</div><button class="addimg btn" id="btnAddImg">${btnAddImgText}</button>`;
+  if(miss.length){
+    h+=`<div class="bindhead">${bindHeadText}</div>`;
+    miss.forEach((m,idx)=>{ h+=`<div class="bindcard" data-idx="${idx}"><div class="bn">${esc(keyOf(m)||m)}</div><div class="bd">${bindCardDescText}</div></div>`; });
+  }
   info.innerHTML=h;
   $("btnAddImg").onclick=()=>$("inImg").click();
   info.querySelectorAll('.bindcard').forEach(card=>{

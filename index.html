@@ -1076,6 +1076,42 @@
       border-top: 1px solid rgba(255,255,255,0.1);
     }
 
+    /* PDF Print Styles: 100% Remove Browser Headers (date/title) & Footers (URL/page numbers) */
+    @media print {
+      @page {
+        margin: 0;
+      }
+      body {
+        margin: 0;
+        padding: 1.5cm !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      #toolbar, #sidebar, #editor-pane, #divider, .copy-code-btn, .toast, .spinner-overlay, #dropzone {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+      #workspace {
+        display: block !important;
+        height: auto !important;
+      }
+      #preview-pane {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+      }
+      #previewWrap {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .paper {
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+    }
+
     /* Theme */
     body.dark .md-body pre {
       background-color: #121416;
