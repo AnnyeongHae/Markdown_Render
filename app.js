@@ -409,7 +409,7 @@ function newDoc(){
   renderFileList(); selectDoc(0);
   pushWorkspaceState();
   setTimeout(()=>$("editor").focus(),60);
-  toast("새 문서 — 에디터에서 바로 작성하세요");
+  toast("New document created");
 }
 
 window.addEventListener('popstate', () => {
@@ -425,8 +425,21 @@ try {
   }
 } catch(e){}
 function renderFileList(){
-  const list=$("fileList"); list.innerHTML="";
-  state.docs.forEach((d,i)=>{ const el=document.createElement("div"); el.className="file-item"+(i===state.current?" active":""); el.textContent=d.path; el.title=d.path; el.onclick=()=>selectDoc(i); list.appendChild(el); });
+  const list=$("fileList"); if (list) list.innerHTML="";
+  const mobileSel = $("mobileDocSelect"); if (mobileSel) mobileSel.innerHTML = "";
+
+  state.docs.forEach((d,i)=>{
+    if (list) {
+      const el=document.createElement("div"); el.className="file-item"+(i===state.current?" active":""); el.textContent=d.path; el.title=d.path; el.onclick=()=>selectDoc(i); list.appendChild(el);
+    }
+    if (mobileSel) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = d.path;
+      if (i === state.current) opt.selected = true;
+      mobileSel.appendChild(opt);
+    }
+  });
 }
 
 // ---------- CodeMirror Editor ----------
@@ -1034,6 +1047,41 @@ if ($("langSel")) {
     if (window.i18n) window.i18n.setLang(e.target.value);
   });
 }
+
+if ($("mobileDocSelect")) {
+  $("mobileDocSelect").addEventListener("change", (e) => {
+    selectDoc(+e.target.value);
+  });
+}
+if ($("btnMobileAddImg")) {
+  $("btnMobileAddImg").onclick = () => $("inImg").click();
+}
+
+if ($("btnMobileSettings")) {
+  $("btnMobileSettings").onclick = () => {
+    const m = $("mobileSettingsModal");
+    if (m) m.style.display = 'flex';
+  };
+}
+if ($("btnCloseMobileSettings")) {
+  $("btnCloseMobileSettings").onclick = () => {
+    const m = $("mobileSettingsModal");
+    if (m) m.style.display = 'none';
+  };
+}
+
+if ($("mSubLangSel")) {
+  $("mSubLangSel").addEventListener("change", (e) => {
+    if (window.i18n) window.i18n.setLang(e.target.value);
+  });
+}
+if ($("mSubBtnTheme")) $("mSubBtnTheme").onclick = () => $("btnTheme").click();
+if ($("mSubBtnMd")) $("mSubBtnMd").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportMd(); };
+if ($("mSubBtnCopy")) $("mSubBtnCopy").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportCopyRichText(); };
+if ($("mSubBtnPdf")) $("mSubBtnPdf").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportPdf(); };
+if ($("mSubBtnHtml")) $("mSubBtnHtml").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportHtml(); };
+if ($("mSubBtnDocx")) $("mSubBtnDocx").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportDocx(); };
+if ($("mSubBtnPng")) $("mSubBtnPng").onclick = () => { $("mobileSettingsModal").style.display = 'none'; exportPng(); };
 
 if($("btnMd")) $("btnMd").onclick = exportMd;
 if($("btnCopyRich")) $("btnCopyRich").onclick=exportCopyRichText;
