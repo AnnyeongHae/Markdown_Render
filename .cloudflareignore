@@ -1,0 +1,8 @@
+node_modules/
+.git/
+Document/
+example/
+.env*
+*.png
+!icon-192.png
+!icon-512.png

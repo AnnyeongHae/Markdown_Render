@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "markdownrender",
+  "compatibility_date": "2026-07-24",
+  "assets": {
+    "directory": ".",
+    "exclude": ["node_modules", ".git", "Document", "example", ".env*", "*.log"]
+  }
+}
