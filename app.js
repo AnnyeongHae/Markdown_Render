@@ -376,14 +376,30 @@ async function addImages(fileList){
 }
 async function bindImage(src, file){ const u8=await readBytes(file); state.overrides.set(keyOf(src), await bytesToDataURLAsync(u8, mimeFor(file.name))); renderPreview(); toast('이미지 연결됨: '+file.name); }
 
+function pushWorkspaceState() {
+  try {
+    if (!history.state || history.state.page !== 'workspace') {
+      history.pushState({ page: 'workspace' }, '', '#workspace');
+    }
+  } catch(e){}
+}
+
 function finishIngest(){
   if(state.docs.length===0){ toast("마크다운(.md) 파일을 찾지 못했어요."); return; }
   state.docs.sort((a,b)=>a.path.localeCompare(b.path));
   $("dropzone").style.display="none"; $("workspace").classList.add("active"); $("toolbar").style.display="flex";
   renderFileList(); selectDoc(0);
+  pushWorkspaceState();
   toast(`문서 ${state.docs.length}개 · 이미지 ${state.assets.size}개 로드됨`);
 }
-function goHome(){ $("workspace").classList.remove('active'); $("dropzone").style.display=''; $("toolbar").style.display='none'; }
+function goHome(pushHistory = true){
+  $("workspace").classList.remove('active');
+  $("dropzone").style.display='';
+  $("toolbar").style.display='none';
+  if (pushHistory) {
+    try { history.pushState({ page: 'home' }, '', location.pathname); } catch(e){}
+  }
+}
 function newDoc(){
   reset();
   state.docs.push({name:'untitled.md',path:'untitled.md',bytes:new Uint8Array(),encoding:'utf-8',detected:'utf-8',text:''});
@@ -391,9 +407,23 @@ function newDoc(){
   $("dropzone").style.display="none"; $("workspace").classList.add("active"); $("toolbar").style.display="flex";
   $("workspace").classList.remove('no-editor'); $("btnEdit").classList.add('on');
   renderFileList(); selectDoc(0);
+  pushWorkspaceState();
   setTimeout(()=>$("editor").focus(),60);
   toast("새 문서 — 에디터에서 바로 작성하세요");
 }
+
+window.addEventListener('popstate', () => {
+  const isWorkspaceActive = $("workspace") && $("workspace").classList.contains('active');
+  if (isWorkspaceActive) {
+    goHome(false);
+  }
+});
+
+try {
+  if (!history.state) {
+    history.replaceState({ page: 'home' }, '', location.pathname);
+  }
+} catch(e){}
 function renderFileList(){
   const list=$("fileList"); list.innerHTML="";
   state.docs.forEach((d,i)=>{ const el=document.createElement("div"); el.className="file-item"+(i===state.current?" active":""); el.textContent=d.path; el.title=d.path; el.onclick=()=>selectDoc(i); list.appendChild(el); });
@@ -428,7 +458,8 @@ function currentDoc(){ return state.docs[state.current]; }
 function selectDoc(i){
   state.current=i; renderFileList();
   const doc=state.docs[i];
-  $("encSel").value=doc.encoding; $("autoTag").textContent="감지: "+encLabel(doc.detected);
+  $("encSel").value=doc.encoding;
+  $("autoTag").textContent = (window.i18n ? window.i18n.t('autoTagDetected') : "Detected: ") + encLabel(doc.detected);
   if(doc.text==null) doc.text=decodeBytes(doc.bytes, doc.encoding);
   
   initCodeMirror();
