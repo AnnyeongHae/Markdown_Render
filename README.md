@@ -11,7 +11,7 @@
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-https%3A%2F%2Fmarkdownrender.pages.dev%2F-blue?style=for-the-badge&logo=cloudflare)](https://markdownrender.pages.dev/)
 [![Report Issue](https://img.shields.io/badge/💬_Report_Issue-GitHub_Issues-green?style=for-the-badge&logo=github)](https://github.com/AnnyeongHae/Markdown_Render/issues)
 [![GitHub Stars](https://img.shields.io/github/stars/AnnyeongHae/Markdown_Render?style=for-the-badge&color=gold&logo=github)](https://github.com/AnnyeongHae/Markdown_Render/stargazers)
-[![License](https://img.shields.io/badge/License-Apache_2.0-red?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -118,4 +118,4 @@ If you encounter a bug, have a feature suggestion, or want to contribute:
 
 ## 📜 License
 
-Distributed under the **Apache 2.0 License**. See [LICENSE](LICENSE) for details.
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for details.
