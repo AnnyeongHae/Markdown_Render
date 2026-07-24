@@ -871,7 +871,7 @@ ${mdCss}</style></head><body><div class="paper"><div class="md-body">${cleanBody
 }
 
 async function exportDocx() {
-  toast("Word 변환 중... (3x 초고화질 다이어그램 & 코드 상자 서식 맞춤)");
+  toast(i18n.t('toastDocxStart'));
   const restore = await mermaidToPngImages(3);
   try { await loadOnce('docx'); } catch(e){}
 
@@ -880,7 +880,7 @@ async function exportDocx() {
   try {
     if (typeof window.htmlDocx !== 'undefined' && typeof window.htmlDocx.asBlob === 'function') {
       const content = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-body { font-family: '맑은 고딕', 'Noto Sans KR', sans-serif; font-size: 11pt; line-height: 1.6; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; font-size: 11pt; line-height: 1.6; }
 table { border-collapse: collapse; width: 100%; margin: 16px 0; border: 1px solid #cccccc; }
 th, td { border: 1px solid #cccccc; padding: 8px 12px; text-align: left; }
 th { background-color: #f1f5f9; font-weight: bold; }
@@ -890,14 +890,13 @@ code { font-family: Consolas, monospace; font-size: 9.5pt; background-color: #f1
 </style></head><body><div class="paper"><div class="md-body">${cleanBodyHtml}</div></div></body></html>`;
       const converted = window.htmlDocx.asBlob(content);
       download(converted, baseName() + '.docx');
-      toast("Word(.docx) 저장 완료!");
+      toast(i18n.t('toastDocxSaved'));
     } else {
-      // Office MSO Standard HTML Doc Fallback (100% Reliable Word document format)
       const content = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
 <head><meta charset='utf-8'><title>${esc(baseName())}</title>
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
 <style>
-body { font-family: '맑은 고딕', 'Noto Sans KR', sans-serif; font-size: 11pt; line-height: 1.6; }
+body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; font-size: 11pt; line-height: 1.6; }
 table { border-collapse: collapse; width: 100%; margin: 16px 0; border: 1px solid #cccccc; }
 th, td { border: 1px solid #cccccc; padding: 8px 12px; text-align: left; }
 th { background-color: #f1f5f9; font-weight: bold; }
@@ -907,10 +906,10 @@ code { font-family: Consolas, monospace; font-size: 9.5pt; background-color: #f1
 </style></head><body><div class="paper"><div class="md-body">${cleanBodyHtml}</div></div></body></html>`;
       const blob = new Blob(['\ufeff' + content], { type: 'application/msword' });
       download(blob, baseName() + '.doc');
-      toast("Word 문서 저장 완료! (.doc)");
+      toast(i18n.t('toastDocxSaved'));
     }
   } catch(err) {
-    toast("Word 변환 오류: " + err.message);
+    toast(i18n.t('toastDocxFail') + err.message);
   } finally {
     restore();
   }

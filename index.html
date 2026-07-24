@@ -1041,30 +1041,29 @@
       <span class="icon-file">📄</span>
       <span class="icon-arrow">↓</span>
     </div>
-    <h2 class="drop-title">마크다운(.md) 및 다이어그램(.mmd) 파일을 끌어다 놓으세요</h2>
-    <p class="drop-desc">
-      마크다운(.md), 다이어그램(.mmd), 이미지가 든 폴더 또는 ZIP을 통째로 올리세요.<br>
-      파일명이 안 맞아도 사이드바에서 이미지를 직접 연결할 수 있어요. (Mac/Win 한글 파일명 호환)<br>
-      모든 처리는 브라우저 안에서만 일어납니다. 서버 업로드 없음.
+    <h2 class="drop-title" data-i18n="dropTitle">Drop Markdown (.md) or Diagram (.mmd) files here</h2>
+    <p class="drop-desc" data-i18n="dropDesc">
+      Drop Markdown (.md), Diagram (.mmd), image folders, or ZIP archives.<br>
+      All processing happens 100% locally in your browser. No server uploads.
     </p>
     <div class="btn-group">
-      <button class="btn btn-primary" id="pickFolder">📂 폴더 (이미지 포함)</button>
-      <button class="btn" id="pickFile">.md / .mmd 파일</button>
-      <button class="btn" id="pickZip">🗜️ ZIP</button>
-      <button class="btn" id="newDocBtn">✍️ 새 문서로 시작</button>
+      <button class="btn btn-primary" id="pickFolder" data-i18n="pickFolderBtn">📂 Open Folder</button>
+      <button class="btn" id="pickFile" data-i18n="pickFileBtn">.md / .mmd File</button>
+      <button class="btn" id="pickZip" data-i18n="pickZipBtn">🗜️ ZIP File</button>
+      <button class="btn" id="newDocBtn" data-i18n="newDocBtn">✍️ New Document</button>
     </div>
-    <p class="caption-muted">텍스트만 빠르게 쓰고 변환하려면 새 문서로 시작 → 바로 에디터가 열립니다.</p>
+    <p class="caption-muted" data-i18n="newDocCaption">Start a new doc to jump straight into the editor.</p>
   </div>
 
   <!-- Workspace View -->
   <div id="workspace">
     <!-- Toolbar -->
     <div id="toolbar">
-      <div class="brand" id="brandHome">
+      <div class="brand" id="brandHome" data-i18n="brandTitle">
         <span>📖</span> MD Viewer & Converter
       </div>
       <div class="tool-group">
-        <select class="select-style" id="langSel" title="Language / 언어 선택">
+        <select class="select-style" id="langSel" title="Language">
           <option value="en">🌐 English</option>
           <option value="ko">🌐 한국어</option>
           <option value="ja">🌐 日本語</option>
@@ -1078,19 +1077,19 @@
           <option value="utf-16be">UTF-16BE</option>
           <option value="iso-8859-1">Latin-1</option>
         </select>
-        <span class="badge" id="autoTag">감지: UTF-8</span>
-        <button class="btn-icon" id="btnStripAbs" data-i18n="btnStripAbs">절대경로 제거</button>
-        <button class="btn-icon" id="btnSide" data-i18n="btnSide">사이드바 토글</button>
-        <button class="btn-icon" id="btnEdit" data-i18n="btnEdit">에디터 토글</button>
-        <button class="btn-icon" id="btnTheme" data-i18n="btnTheme">테마 변경</button>
+        <span class="badge" id="autoTag">Detected: UTF-8</span>
+        <button class="btn-icon" id="btnStripAbs" data-i18n="btnStripAbs">Clean Paths</button>
+        <button class="btn-icon" id="btnSide" data-i18n="btnSide">Toggle Sidebar</button>
+        <button class="btn-icon" id="btnEdit" data-i18n="btnEdit">Toggle Editor</button>
+        <button class="btn-icon" id="btnTheme" data-i18n="btnTheme">Theme</button>
       </div>
       <div class="tool-group">
-        <button class="btn" id="btnMd" data-i18n="btnMd">📥 .md 저장</button>
-        <button class="btn" id="btnCopyRich" data-i18n="btnCopyRich">📋 서식 복사</button>
-        <button class="btn" id="btnPdf" data-i18n="btnPdf">PDF 저장</button>
-        <button class="btn" id="btnHtml" data-i18n="btnHtml">HTML 내보내기</button>
-        <button class="btn" id="btnDocx" data-i18n="btnDocx">Word(.docx)</button>
-        <button class="btn" id="btnPng" data-i18n="btnPng">PNG 이미지화</button>
+        <button class="btn" id="btnMd" data-i18n="btnMd">📥 Save .md</button>
+        <button class="btn" id="btnCopyRich" data-i18n="btnCopyRich">📋 Copy Rich Text</button>
+        <button class="btn" id="btnPdf" data-i18n="btnPdf">Save PDF</button>
+        <button class="btn" id="btnHtml" data-i18n="btnHtml">Export HTML</button>
+        <button class="btn" id="btnDocx" data-i18n="btnDocx">Word (.docx)</button>
+        <button class="btn" id="btnPng" data-i18n="btnPng">Export PNG</button>
       </div>
     </div>
 
@@ -1099,31 +1098,31 @@
       <!-- Sidebar -->
       <div id="sidebar">
         <div class="sidebar-section">
-          <div class="sidebar-title">문서 목록</div>
+          <div class="sidebar-title" data-i18n="docListTitle">Documents</div>
           <div id="fileList"></div>
         </div>
         <div class="sidebar-section">
-          <div class="sidebar-title">문서 목차 (TOC)</div>
+          <div class="sidebar-title" data-i18n="tocListTitle">Table of Contents</div>
           <div id="tocList"></div>
         </div>
         <div class="sidebar-section" style="flex-grow: 1; border-bottom: none;">
-          <div class="sidebar-title" data-i18n="assetInfoTitle">이미지 자산 정보</div>
+          <div class="sidebar-title" data-i18n="assetInfoTitle">Image Assets</div>
           <div id="assetInfo"></div>
         </div>
       </div>
 
       <!-- Editor Pane -->
       <div id="editor-pane">
-        <textarea id="editor" placeholder="여기에 마크다운을 입력하세요..." spellcheck="false"></textarea>
+        <textarea id="editor" placeholder="Type or paste your Markdown content here..." data-i18n="editorPlaceholder" spellcheck="false"></textarea>
         <div class="editor-footer">
-          <span id="counts">0자 · 0단어</span>
-          <span id="syntaxHealthTag" class="syntax-tag ok" title="문법 상태">🟢 문법 정상</span>
-          <span id="draftSavedTag" style="font-size:10px; color:var(--text-muted);">자동 저장됨</span>
+          <span id="counts">0 chars · 0 words</span>
+          <span id="syntaxHealthTag" class="syntax-tag ok" title="Syntax State" data-i18n="syntaxOk">🟢 Syntax Valid</span>
+          <span id="draftSavedTag" style="font-size:10px; color:var(--text-muted);" data-i18n="draftSaved">Auto-saved</span>
         </div>
       </div>
 
       <!-- Drag Split Divider (Placed between Editor Pane & Preview Pane) -->
-      <div id="divider" title="드래그하여 에디터와 미리보기 크기 조절"></div>
+      <div id="divider" title="Drag to resize editor and preview panes" data-i18n-title="dividerTitle"></div>
 
       <!-- Preview Pane -->
       <div id="preview-pane">
