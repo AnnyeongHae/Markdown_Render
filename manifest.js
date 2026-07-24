@@ -1,0 +1,15 @@
+on{
+  "name": "MD Viewer & Converter",
+  "short_name": "MD Convert",
+  "description": "마크다운을 보고 편집하고 PDF·HTML·Word·PNG로 변환. 100% 브라우저에서 처리.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#2563eb",
+  "lang": "ko",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
