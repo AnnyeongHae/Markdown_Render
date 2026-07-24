@@ -201,56 +201,76 @@
       display: flex;
     }
 
-    /* Toolbar */
+    /* Toolbar Layout Fixed & Responsive System */
     #toolbar {
       display: none;
       align-items: center;
       justify-content: space-between;
-      height: 48px;
-      padding: 0 16px;
+      height: 44px;
+      padding: 0 12px;
       background-color: var(--bg-panel);
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #toolbar::-webkit-scrollbar {
+      display: none;
     }
 
     .brand {
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
+      margin-right: 8px;
     }
 
     .tool-group {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      flex-shrink: 0;
     }
 
     .select-style {
-      padding: 5px 8px;
+      padding: 4px 6px;
       border-radius: 4px;
       border: 1px solid var(--border);
-      background-color: #ffffff;
-      color: #212529;
+      background-color: var(--bg-body);
+      color: var(--text);
       font-family: inherit;
-      font-size: 12px;
+      font-size: 11.5px;
       outline: none;
       cursor: pointer;
+      height: 28px;
+      flex-shrink: 0;
     }
 
-    .btn-icon {
-      padding: 5px 10px;
+    .btn-icon, .tool-group .btn {
+      height: 28px;
+      padding: 0 8px;
       border-radius: 4px;
       border: 1px solid var(--border);
-      background-color: #ffffff;
-      color: #212529;
+      background-color: var(--bg-body);
+      color: var(--text);
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
     }
 
-    .btn-icon:hover, .btn-icon.on {
+    .btn-icon:hover, .tool-group .btn:hover, .btn-icon.on {
       background-color: var(--accent-soft);
       border-color: var(--accent);
     }
@@ -262,13 +282,25 @@
       padding: 3px 6px;
       border-radius: 4px;
       border: 1px solid var(--border);
+      flex-shrink: 0;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Responsive adjustments for narrow screens (< 1100px) */
+    @media (max-width: 1100px) {
+      .btn-icon, .tool-group .btn {
+        padding: 0 6px;
+        font-size: 11px;
+      }
     }
 
     /* Panes Layout */
     #panes {
       display: flex;
       flex-grow: 1;
-      height: calc(100vh - 48px);
+      height: calc(100vh - 44px);
       position: relative;
     }
 
