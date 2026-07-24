@@ -4,3 +4,6 @@ node_modules/
 !icon-512.png
 .DS_Store
 *.log
+.env*
+Document/
+

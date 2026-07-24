@@ -1064,6 +1064,13 @@
         <span>📖</span> MD Viewer & Converter
       </div>
       <div class="tool-group">
+        <select class="select-style" id="langSel" title="Language / 언어 선택">
+          <option value="en">🌐 English</option>
+          <option value="ko">🌐 한국어</option>
+          <option value="ja">🌐 日本語</option>
+          <option value="zh">🌐 中文</option>
+          <option value="es">🌐 Español</option>
+        </select>
         <select class="select-style" id="encSel">
           <option value="utf-8">UTF-8</option>
           <option value="euc-kr">EUC-KR</option>
@@ -1072,18 +1079,18 @@
           <option value="iso-8859-1">Latin-1</option>
         </select>
         <span class="badge" id="autoTag">감지: UTF-8</span>
-        <button class="btn-icon" id="btnStripAbs">절대경로 제거</button>
-        <button class="btn-icon" id="btnSide">사이드바 토글</button>
-        <button class="btn-icon" id="btnEdit">에디터 토글</button>
-        <button class="btn-icon" id="btnTheme">테마 변경</button>
+        <button class="btn-icon" id="btnStripAbs" data-i18n="btnStripAbs">절대경로 제거</button>
+        <button class="btn-icon" id="btnSide" data-i18n="btnSide">사이드바 토글</button>
+        <button class="btn-icon" id="btnEdit" data-i18n="btnEdit">에디터 토글</button>
+        <button class="btn-icon" id="btnTheme" data-i18n="btnTheme">테마 변경</button>
       </div>
       <div class="tool-group">
-        <button class="btn" id="btnMd">📥 .md 저장</button>
-        <button class="btn" id="btnCopyRich">📋 서식 복사</button>
-        <button class="btn" id="btnPdf">PDF 저장</button>
-        <button class="btn" id="btnHtml">HTML 내보내기</button>
-        <button class="btn" id="btnDocx">Word(.docx)</button>
-        <button class="btn" id="btnPng">PNG 이미지화</button>
+        <button class="btn" id="btnMd" data-i18n="btnMd">📥 .md 저장</button>
+        <button class="btn" id="btnCopyRich" data-i18n="btnCopyRich">📋 서식 복사</button>
+        <button class="btn" id="btnPdf" data-i18n="btnPdf">PDF 저장</button>
+        <button class="btn" id="btnHtml" data-i18n="btnHtml">HTML 내보내기</button>
+        <button class="btn" id="btnDocx" data-i18n="btnDocx">Word(.docx)</button>
+        <button class="btn" id="btnPng" data-i18n="btnPng">PNG 이미지화</button>
       </div>
     </div>
 
@@ -1099,15 +1106,9 @@
           <div class="sidebar-title">문서 목차 (TOC)</div>
           <div id="tocList"></div>
         </div>
-        <div class="sidebar-section" style="flex-grow: 1;">
-          <div class="sidebar-title">이미지 자산 정보</div>
+        <div class="sidebar-section" style="flex-grow: 1; border-bottom: none;">
+          <div class="sidebar-title" data-i18n="assetInfoTitle">이미지 자산 정보</div>
           <div id="assetInfo"></div>
-        </div>
-        <!-- Sidebar Ad Slot Placeholder -->
-        <div class="sidebar-section" style="border-bottom: none;">
-          <div class="ad-slot-container" id="ad-slot-sidebar">
-            <span>📢 Sponsored / Ad Slot</span>
-          </div>
         </div>
       </div>
 
@@ -1129,10 +1130,6 @@
         <div id="previewWrap">
           <div class="paper" id="paper">
             <div class="md-body" id="preview"></div>
-          </div>
-          <!-- Preview Banner Ad Slot Placeholder -->
-          <div class="ad-slot-banner" id="ad-slot-footer">
-            <span>📢 Ad Slot (Cloudflare / Google AdSense Ready)</span>
           </div>
         </div>
       </div>
@@ -1194,6 +1191,7 @@
   <script src="vendor/codemirror/codemirror.min.js?v=20260723_v10"></script>
   <script src="vendor/codemirror/markdown.min.js?v=20260723_v10"></script>
   <script src="lib/core.js?v=20260723_v10"></script>
+  <script src="lib/i18n.js?v=20260723_v10"></script>
   <script src="app.js?v=20260723_v10"></script>
 </body>
 </html>

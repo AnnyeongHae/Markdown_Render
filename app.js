@@ -971,6 +971,12 @@ $("brandHome").onclick=goHome;
 $("btnSide").onclick=()=>{ $("workspace").classList.toggle('no-sidebar'); $("btnSide").classList.toggle('on'); };
 $("btnEdit").onclick=()=>{ $("workspace").classList.toggle('no-editor'); $("btnEdit").classList.toggle('on'); };
 
+if ($("langSel")) {
+  $("langSel").addEventListener("change", (e) => {
+    if (window.i18n) window.i18n.setLang(e.target.value);
+  });
+}
+
 if($("btnMd")) $("btnMd").onclick = exportMd;
 if($("btnCopyRich")) $("btnCopyRich").onclick=exportCopyRichText;
 $("btnPdf").onclick=exportPdf;
