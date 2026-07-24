@@ -1016,6 +1016,19 @@ $("brandHome").onclick=goHome;
 $("btnSide").onclick=()=>{ $("workspace").classList.toggle('no-sidebar'); $("btnSide").classList.toggle('on'); };
 $("btnEdit").onclick=()=>{ $("workspace").classList.toggle('no-editor'); $("btnEdit").classList.toggle('on'); };
 
+if ($("btnTabEdit") && $("btnTabPreview")) {
+  $("btnTabEdit").onclick = () => {
+    $("workspace").classList.remove("mobile-mode-preview");
+    $("btnTabEdit").classList.add("active");
+    $("btnTabPreview").classList.remove("active");
+  };
+  $("btnTabPreview").onclick = () => {
+    $("workspace").classList.add("mobile-mode-preview");
+    $("btnTabEdit").classList.remove("active");
+    $("btnTabPreview").classList.add("active");
+  };
+}
+
 if ($("langSel")) {
   $("langSel").addEventListener("change", (e) => {
     if (window.i18n) window.i18n.setLang(e.target.value);
