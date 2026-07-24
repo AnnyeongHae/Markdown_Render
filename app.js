@@ -296,14 +296,140 @@ const md = window.markdownit({
 md.validateLink = (url)=>!/^\s*(javascript|vbscript):/i.test(String(url));
 try{ if(window.markdownitFootnote) md.use(window.markdownitFootnote); }catch(e){}
 try{ if(window.markdownitTaskLists) md.use(window.markdownitTaskLists,{label:true}); }catch(e){}
+window.md = md;
 const esc = (s)=>md.utils.escapeHtml(String(s));
 
-// render ```mermaid fences as a <pre class="mermaid"> (rendered later by runMermaid)
+// Global Carousel Navigation Handlers
+window.setCarouselSlide = function(carouselId, targetIndex) {
+  const wrapper = document.getElementById(carouselId);
+  if (!wrapper) return;
+  const track = wrapper.querySelector('.md-carousel-track');
+  const slides = wrapper.querySelectorAll('.md-carousel-slide');
+  const dots = wrapper.querySelectorAll('.md-carousel-dot');
+  const currCounter = wrapper.querySelector('.carousel-curr');
+  const btnPrev = wrapper.querySelector('.btn-prev');
+  const btnNext = wrapper.querySelector('.btn-next');
+  const total = slides.length;
+  if (total === 0) return;
+
+  const validIndex = Math.max(0, Math.min(total - 1, targetIndex));
+  wrapper.setAttribute('data-current', validIndex);
+
+  if (track) track.style.transform = `translateX(-${validIndex * 100}%)`;
+
+  slides.forEach((slide, idx) => {
+    slide.classList.toggle('active', idx === validIndex);
+  });
+
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === validIndex);
+  });
+
+  if (currCounter) currCounter.textContent = validIndex + 1;
+  if (btnPrev) btnPrev.disabled = (validIndex === 0);
+  if (btnNext) btnNext.disabled = (validIndex === total - 1);
+};
+
+window.moveCarouselSlide = function(carouselId, delta) {
+  const wrapper = document.getElementById(carouselId);
+  if (!wrapper) return;
+  const curr = parseInt(wrapper.getAttribute('data-current') || '0', 10);
+  window.setCarouselSlide(carouselId, curr + delta);
+};
+
+function bindCarousels() {
+  const preview = $("preview");
+  if (!preview) return;
+
+  preview.querySelectorAll('.md-carousel-wrapper').forEach(wrapper => {
+    const carouselId = wrapper.id;
+    const btnPrev = wrapper.querySelector('.btn-prev');
+    const btnNext = wrapper.querySelector('.btn-next');
+    const dots = wrapper.querySelectorAll('.md-carousel-dot');
+
+    if (btnPrev) {
+      btnPrev.onclick = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.moveCarouselSlide(carouselId, -1);
+      };
+    }
+    if (btnNext) {
+      btnNext.onclick = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.moveCarouselSlide(carouselId, 1);
+      };
+    }
+    dots.forEach((dot, idx) => {
+      dot.onclick = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.setCarouselSlide(carouselId, idx);
+      };
+    });
+  });
+}
+
+// render ```mermaid and ```carousel fences
 const _origFence = md.renderer.rules.fence;
 md.renderer.rules.fence = function(tokens, idx, options, env, self){
-  const info=(tokens[idx].info||'').trim().toLowerCase();
-  if(info==='mermaid'){ return '<pre class="mermaid">'+md.utils.escapeHtml(tokens[idx].content)+'</pre>\n'; }
-  return _origFence ? _origFence(tokens,idx,options,env,self) : self.renderToken(tokens,idx,options);
+  const info = (tokens[idx].info || '').trim().toLowerCase();
+  
+  if (info === 'mermaid') { 
+    return '<pre class="mermaid">' + md.utils.escapeHtml(tokens[idx].content) + '</pre>\n'; 
+  }
+
+  if (info === 'carousel') {
+    if (env && env._inCarousel) {
+      return _origFence ? _origFence(tokens, idx, options, env, self) : self.renderToken(tokens, idx, options);
+    }
+    const rawCode = tokens[idx].content || '';
+    // Split by <!-- slide --> HTML comments with case & whitespace tolerance
+    const slidesMarkdown = rawCode.split(/<!--\s*slide\s*-->/gi);
+    const carouselId = 'carousel-' + Math.random().toString(36).substr(2, 9);
+    const totalSlides = slidesMarkdown.length;
+
+    const childEnv = Object.assign({}, env || {}, { _inCarousel: true });
+    let slidesHtml = '';
+    slidesMarkdown.forEach((slideMd, i) => {
+      const activeClass = i === 0 ? ' active' : '';
+      // Recursively render Markdown inside each slide with guard env!
+      const renderedSlideHtml = md.render(slideMd.trim(), childEnv);
+      slidesHtml += `<div class="md-carousel-slide${activeClass}" data-slide-index="${i}">
+        <div class="md-carousel-slide-content">${renderedSlideHtml}</div>
+      </div>`;
+    });
+
+    let dotsHtml = '';
+    for (let i = 0; i < totalSlides; i++) {
+      const activeDot = i === 0 ? ' active' : '';
+      dotsHtml += `<button class="md-carousel-dot${activeDot}" onclick="window.setCarouselSlide('${carouselId}', ${i})" aria-label="Slide ${i + 1}"></button>`;
+    }
+
+    const prevDisabled = ' disabled';
+    const nextDisabled = totalSlides <= 1 ? ' disabled' : '';
+
+    return `<div class="md-carousel-wrapper" id="${carouselId}" data-current="0" data-total="${totalSlides}">
+      <div class="md-carousel-header">
+        <div class="md-carousel-badge">🎠 Interactive Slides</div>
+        <div class="md-carousel-counter">
+          <span class="carousel-curr">1</span> / <span class="carousel-total">${totalSlides}</span>
+        </div>
+      </div>
+      <div class="md-carousel-viewport">
+        <div class="md-carousel-track">
+          ${slidesHtml}
+        </div>
+      </div>
+      <div class="md-carousel-footer">
+        <button class="md-carousel-nav btn-prev"${prevDisabled} onclick="window.moveCarouselSlide('${carouselId}', -1)" title="Previous Slide">‹ Prev</button>
+        <div class="md-carousel-dots">
+          ${dotsHtml}
+        </div>
+        <button class="md-carousel-nav btn-next"${nextDisabled} onclick="window.moveCarouselSlide('${carouselId}', 1)" title="Next Slide">Next ›</button>
+      </div>
+    </div>\n`;
+  }
+
+  return _origFence ? _origFence(tokens, idx, options, env, self) : self.renderToken(tokens, idx, options);
 };
 
 // ---------- state ----------
@@ -616,6 +742,7 @@ function renderPreview(){
     });
 
     $("preview").innerHTML=tmp.innerHTML;
+    bindCarousels();
     if(hasMermaid(text, doc.name)) runMermaid();
     if(hasMath(text)) renderMath();
     updateAssetInfo();
