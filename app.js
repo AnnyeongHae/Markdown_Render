@@ -40,12 +40,57 @@ function loadOnce(key){
 // ---------- math (KaTeX) & diagrams (Mermaid) — loaded only when present ----------
 function ensureKatex(){ ensureCss('vendor/katex/katex.min.css','katex-css'); return loadOnce('katex').then(()=>loadOnce('katexAuto')); }
 function renderMath(){
-  ensureKatex().then(()=>{ if(typeof window.renderMathInElement!=='function') return;
-    try{ window.renderMathInElement($("preview"),{ delimiters:[
-      {left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},
-      {left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}
-    ], ignoredClasses:['mermaid'], throwOnError:false }); }catch(e){}
-  }).catch(()=>{});
+  ensureKatex().then(()=>{ 
+    const preview = $("preview");
+    if(!preview) return;
+
+    // 1. Direct fallback katex.render for block formulas $$...$$ inside paragraphs (Auto-fixes unescaped % signs)
+    if (typeof window.katex !== 'undefined' && typeof window.katex.render === 'function') {
+      const ps = preview.querySelectorAll('p, div');
+      ps.forEach(p => {
+        const txt = p.textContent ? p.textContent.trim() : '';
+        if (txt.startsWith('$$') && txt.endsWith('$$')) {
+          let rawMathStr = txt.substring(2, txt.length - 2).trim();
+          // Auto-fix unescaped % signs to \\% to prevent KaTeX line-comment ParseErrors
+          rawMathStr = rawMathStr.replace(/(^|[^\\])%/g, '$1\\%');
+
+          try {
+            const mathContainer = document.createElement('div');
+            mathContainer.className = 'katex-display-block';
+            mathContainer.style.margin = '18px 0';
+            mathContainer.style.textAlign = 'center';
+            window.katex.render(rawMathStr, mathContainer, {
+              displayMode: true,
+              strict: false,
+              trust: true,
+              throwOnError: false
+            });
+            p.replaceWith(mathContainer);
+          } catch(err) {
+            console.warn('Direct katex render error:', err);
+          }
+        }
+      });
+    }
+
+    // 2. renderMathInElement for remaining inline math
+    if(typeof window.renderMathInElement==='function') {
+      try {
+        window.renderMathInElement(preview, { 
+          delimiters:[
+            {left:'$$',right:'$$',display:true},
+            {left:'$',right:'$',display:false},
+            {left:'\\[',right:'\\]',display:true},
+            {left:'\\(',right:'\\)',display:false}
+          ], 
+          ignoredClasses:['mermaid', 'code-block-wrapper', 'hljs'], 
+          strict: false,
+          trust: true,
+          throwOnError: false 
+        }); 
+      }catch(e){}
+    }
+  }).catch((err)=>console.warn('ensureKatex fail:', err));
 }
 function normalizeMermaidCode(code) {
   if (!code) return "";
@@ -661,28 +706,31 @@ function renderPreview(){
         const contentAfterTag = match[2] ? match[2].trim() : '';
         const icons = { note: '📝', tip: '💡', important: '⚡', warning: '⚠️', caution: '🚨', info: 'ℹ️', todo: '☑️', faq: '❓', quote: '💬' };
         const icon = icons[type] || '📌';
+        const typeDefaultTitle = type.toUpperCase();
         
         let titleHtml = '';
         let bodyHtml = '';
+        
+        // 1. Explicit line break <br>
         const brMatch = contentAfterTag.match(/<br\s*\/?>/i);
         if (brMatch) {
           const splitIdx = brMatch.index;
           titleHtml = contentAfterTag.substring(0, splitIdx).trim();
           bodyHtml = contentAfterTag.substring(splitIdx + brMatch[0].length).trim();
+        } else if (contentAfterTag.length > 40 || contentAfterTag.includes('</')) {
+          // 2. Long text without <br>: Treat type as title, and entire text as paragraph body
+          titleHtml = typeDefaultTitle;
+          bodyHtml = contentAfterTag;
         } else {
-          titleHtml = contentAfterTag;
-        }
-
-        if (!titleHtml) {
-          titleHtml = type.charAt(0).toUpperCase() + type.slice(1);
+          titleHtml = contentAfterTag || typeDefaultTitle;
         }
 
         const calloutDiv = document.createElement('div');
         calloutDiv.className = `callout callout-${type}`;
         
-        let headerHtml = `<div class="callout-title"><span>${icon}</span> ${titleHtml}</div>`;
+        let headerHtml = `<div class="callout-title"><span class="callout-icon">${icon}</span> <span class="callout-title-text">${titleHtml}</span></div>`;
         if (bodyHtml) {
-          headerHtml += `<div class="callout-body" style="margin-top:6px; font-size:12.5px; line-height:1.6;">${bodyHtml}</div>`;
+          headerHtml += `<div class="callout-body" style="margin-top:6px; font-size:13px; line-height:1.65; color:inherit;">${bodyHtml}</div>`;
         }
 
         firstP.innerHTML = headerHtml;
@@ -761,7 +809,7 @@ function renderPreview(){
     $("preview").innerHTML=tmp.innerHTML;
     bindCarousels();
     if(hasMermaid(text, doc.name)) runMermaid();
-    if(hasMath(text)) renderMath();
+    renderMath();
     updateAssetInfo();
   } catch (err) {
     console.error('renderPreview error:', err);
@@ -1039,13 +1087,31 @@ function getExportCleanHtml() {
     }
   });
 
-  // 3. Ensure img elements have explicit HTML width/height attributes for Word MSO HTML compatibility
+  // 3. Image aspect ratio protection for HTML/Word exports
   clone.querySelectorAll('img').forEach(img => {
-    let w = parseInt(img.getAttribute('width') || img.style.width, 10);
-    if (!w || isNaN(w) || w > 520) {
+    const isMermaid = img.closest && img.closest('.mermaid-card');
+    img.removeAttribute('height'); // Remove fixed height attribute to preserve natural aspect ratio
+    
+    if (isMermaid) {
       img.setAttribute('width', '520');
       img.style.maxWidth = '520px';
-      img.style.width = '520px';
+      img.style.width = '100%';
+      img.style.height = 'auto';
+    } else {
+      const natW = img.naturalWidth || 0;
+      const natH = img.naturalHeight || 0;
+      if (natW > 0 && natH > 0 && natW > 520) {
+        img.setAttribute('width', '520');
+        const calcH = Math.round((520 / natW) * natH);
+        img.setAttribute('height', String(calcH));
+      } else {
+        img.removeAttribute('width');
+      }
+      img.style.maxWidth = '100%';
+      img.style.height = 'auto';
+      img.style.objectFit = 'contain';
+      img.style.display = 'block';
+      img.style.margin = '16px auto';
     }
   });
 
@@ -1077,9 +1143,25 @@ async function exportCopyRichText() {
 }
 
 function exportPdf() {
-  toast("PDF 인쇄 창 준비 중... (코드 자동 줄바꿈 적용)");
+  toast("PDF 인쇄 창 준비 중...");
   fontsReady().then(() => {
-    setTimeout(() => window.print(), 250);
+    let printContainer = document.getElementById('print-container');
+    if (printContainer) printContainer.remove();
+
+    printContainer = document.createElement('div');
+    printContainer.id = 'print-container';
+    printContainer.className = 'md-body';
+    printContainer.innerHTML = getExportCleanHtml();
+    document.body.appendChild(printContainer);
+
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        if (printContainer && printContainer.parentNode) {
+          printContainer.parentNode.removeChild(printContainer);
+        }
+      }, 1000);
+    }, 250);
   });
 }
 

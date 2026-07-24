@@ -33,6 +33,8 @@
   </script>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" id="katex-css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
   <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -853,14 +855,16 @@
       border-color: #2d3748 !important;
     }
 
-    /* Callout Boxes (Obsidian & GitHub style) */
+    /* Callout Boxes (Obsidian & GitHub style - Clean Vertical Card) */
     .callout {
-      padding: 12px 16px;
+      display: block;
+      padding: 14px 18px;
       margin: 16px 0;
       border-left: 4px solid var(--accent);
       border-radius: 6px;
       background-color: var(--accent-soft);
       font-size: 13.5px;
+      line-height: 1.6;
     }
     .callout-title {
       font-weight: 700;
@@ -868,8 +872,15 @@
       color: var(--accent);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 14px;
+    }
+    .callout-body {
+      display: block;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text);
+      word-break: break-word;
     }
     .callout p:last-child {
       margin-bottom: 0;
@@ -1449,7 +1460,7 @@
       opacity: 1;
     }
 
-    /* PDF Print Styles: 100% Remove Browser Headers (date/title) & Footers (URL/page numbers) */
+    /* PDF Print Styles: Dedicated Print Container Strategy */
     @media print {
       @page {
         margin: 0;
@@ -1462,40 +1473,39 @@
         height: auto !important;
         overflow: visible !important;
       }
-      #toolbar, #sidebar, #editor-pane, #divider, .copy-code-btn, .toast, .spinner-overlay, #dropzone, #mobileDocBar, .mobile-view-toggle, #btnMobileSettings {
+      body > *:not(#print-container) {
         display: none !important;
         opacity: 0 !important;
         visibility: hidden !important;
       }
-      #workspace, #panes, #preview-pane, #previewWrap {
+      #print-container {
         display: block !important;
         position: static !important;
         width: 100% !important;
-        height: auto !important;
-        min-height: 0 !important;
-        overflow: visible !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-        background: #ffffff !important;
-      }
-      .paper {
-        box-shadow: none !important;
-        padding: 1.5cm !important;
-        margin: 0 auto !important;
         max-width: 100% !important;
-        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 1.5cm !important;
         background: #ffffff !important;
+        color: #000000 !important;
+        font-family: 'Noto Sans KR', -apple-system, sans-serif !important;
+        box-sizing: border-block;
       }
-
-      /* PDF Print Carousel Flattening Rules */
+      #print-container img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        margin: 16px auto !important;
+        page-break-inside: avoid !important;
+      }
+      #print-container table, #print-container pre, #print-container .callout, #print-container .md-carousel-wrapper {
+        page-break-inside: avoid !important;
+      }
       .md-carousel-wrapper {
         border: 1px solid #d0d7de !important;
         box-shadow: none !important;
         background: #ffffff !important;
         margin: 16px 0 !important;
-        page-break-inside: avoid !important;
       }
       .md-carousel-header, .md-carousel-footer {
         display: none !important;
@@ -1503,7 +1513,6 @@
       .md-carousel-viewport {
         overflow: visible !important;
         height: auto !important;
-        min-height: 0 !important;
       }
       .md-carousel-track {
         display: block !important;
@@ -1516,7 +1525,6 @@
         width: 100% !important;
         padding: 12px 16px !important;
         border-bottom: 1px dashed #e1e4e8 !important;
-        page-break-inside: avoid !important;
       }
       .md-carousel-slide:last-child {
         border-bottom: none !important;
