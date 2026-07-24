@@ -1035,7 +1035,24 @@ function getExportCleanHtml() {
   // 1. Remove copy buttons
   clone.querySelectorAll('.copy-code-btn').forEach(btn => btn.remove());
 
-  // 1-2. Flatten Carousel Slides for HTML / Word Exports (Show all slides sequentially)
+  // 1-2. Clean KaTeX MathML for Word & HTML Export (Prevent 3x duplicated text overlapping)
+  clone.querySelectorAll('.katex-display-block, .katex-display, .katex').forEach(katexEl => {
+    const mathMl = katexEl.querySelector('math');
+    if (mathMl) {
+      const cleanMath = mathMl.cloneNode(true);
+      cleanMath.setAttribute('xmlns', 'http://www.w3.org/1998/Math/MathML');
+      cleanMath.querySelectorAll('annotation').forEach(ann => ann.remove());
+      
+      const mathWrapper = document.createElement('div');
+      mathWrapper.className = 'word-math-block';
+      mathWrapper.style.textAlign = 'center';
+      mathWrapper.style.margin = '16px 0';
+      mathWrapper.appendChild(cleanMath);
+      katexEl.replaceWith(mathWrapper);
+    }
+  });
+
+  // 1-3. Flatten Carousel Slides for HTML / Word Exports (Show all slides sequentially)
   clone.querySelectorAll('.md-carousel-wrapper').forEach(wrapper => {
     const track = wrapper.querySelector('.md-carousel-track');
     const header = wrapper.querySelector('.md-carousel-header');
@@ -1142,8 +1159,22 @@ async function exportCopyRichText() {
   }
 }
 
+function baseName() {
+  const doc = currentDoc();
+  let name = (doc && doc.path) ? doc.path : "Untitled";
+  if (name.includes('/')) name = name.split('/').pop();
+  if (name.includes('\\')) name = name.split('\\').pop();
+  if (name.includes('.')) {
+    name = name.substring(0, name.lastIndexOf('.'));
+  }
+  name = name.trim().replace(/[\/\\:*?"<>|]/g, '_') || "Untitled";
+  return `${name}_markdownrender`;
+}
+
 function exportPdf() {
   toast("PDF 인쇄 창 준비 중...");
+  const origTitle = document.title;
+  document.title = baseName();
   fontsReady().then(() => {
     let printContainer = document.getElementById('print-container');
     if (printContainer) printContainer.remove();
@@ -1160,6 +1191,7 @@ function exportPdf() {
         if (printContainer && printContainer.parentNode) {
           printContainer.parentNode.removeChild(printContainer);
         }
+        document.title = origTitle;
       }, 1000);
     }, 250);
   });
